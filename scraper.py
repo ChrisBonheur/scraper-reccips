@@ -5,9 +5,13 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import logging as lg
-from pickle import Pickler
+from pickle import Unpickler
+from time import sleep
+from os import sys
 
 from module.writter import writte_on_file_recip
+
+sys.setrecursionlimit(1500)
 
 # url = 'https://larecette.net/les-recettes/gouter/'
 
@@ -32,8 +36,9 @@ from module.writter import writte_on_file_recip
 #     obj.dump(links_to_scrap)
 #
 # print("****************Fin d'ajout des urls à scraper**********")
-
-
+with open('links_to_scrap', 'rb') as file_read:
+    file_unpickle = Unpickler(file_read)
+    links_to_scrap = file_unpickle.load()
 
 for link in links_to_scrap:
     url = link
@@ -77,5 +82,8 @@ for link in links_to_scrap:
                             recip_direction,
                             recip_image_link,
                             recip_ingredients)
+
+        print("Une pause de 5 seconde")
+        sleep(5)
     else:
         lg.critical("Impossible de se connecter à la page")
