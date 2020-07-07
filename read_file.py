@@ -1,29 +1,36 @@
-from pickle import Unpickler
+from pickle import Unpickler, Pickler
+import json
 import logging as lg
+from os import sys
+
+sys.setrecursionlimit(2000)
+
+recips = []
 
 try:
-    with open('recips', 'rb') as file_read:
-        obj_read = Unpickler(file_read)
-        recettes = obj_read.load()
+    with open('recips.json') as fp:
+        data = json.load(fp)
+        for entry in data:
+            recips.append(entry['recip'])
 except FileNotFoundError as fne:
-    lg.critical('File "recips" not found \n python message => {}'.format(e))
+    lg.critical('File "recips.json" not found \n python message => {}'.format(e))
 except EOFError as efe :
     lg.critical('Fichier vide \n python msg => {}'.format(efe))
 else:
     # print(recettes)
-    i = 0
-    for name, content in recettes.items():
-        i += 1
+    total_recettes = 0
+    for recip in recips:
+        total_recettes += 1
         #details ingredients from recips file
-        recip_name = name
-        recip_category = content['recip_category']
-        recip_direction = content['recip_direction']
+        recip_name = recip['name']
+        recip_category = recip['category']
+        recip_direction = recip['preparation']
         recip_direction = " ".join(recip_direction)
-        recip_ingredients = content['recip_ingredients']
-        recip_person_number = content['recip_person_number']
-        recip_image_link = content['recip_image_link']
+        recip_ingredients = recip['ingredients']
+        recip_person_number = recip['person_number']
+        recip_image_link = recip['url_image']
 
-        print('RECETTE N°{}'.format(i))
+        # print('RECETTE N°{}'.format(i))
         print('Nom : {} \n'.format(recip_name))
         print('Categorie : {} \n'.format(recip_category))
         print('Nombre de personne(s) : {} \n'.format(recip_person_number))
@@ -32,3 +39,5 @@ else:
             print('***{} \n'.format(ingredient))
         print('PREPARATION : \n {}'.format(recip_direction))
         print('Lien de l\'image : {}'.format(recip_image_link))
+
+    print("Total recettes : {}".format(total_recettes))

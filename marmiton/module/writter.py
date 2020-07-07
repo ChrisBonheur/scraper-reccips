@@ -12,7 +12,7 @@ def writte_on_file_recip(name, category, person_number, direction, image_link, *
     total_scraped = 0
     #read in recips dictionnary
     try:
-        with open('recips.json') as fp:
+        with open('recips.json', 'rb') as fp:
             data = json.load(fp)
         print("*********Le fichier \" recips \" a bien été ouvert********")
     except FileNotFoundError as e:
@@ -34,8 +34,8 @@ def writte_on_file_recip(name, category, person_number, direction, image_link, *
                                    'url_image': image_link,
                                    }
                                 });
-            with open('recips.json', 'w') as file_writte:
-                json.dump(data, file_writte)
+            with open('recips.json', 'wb') as file_writte:
+                json.dumps(data, file_writte)
                 msg = print('\n \n ***La recette "{}" a bien été ajoué***\
                     \n\n***FIN DU PROGRAMME***'.format(name))
         else:
